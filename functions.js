@@ -1,3 +1,23 @@
+// Objetos traídos del HTML
+let inputNombre = document.getElementById("nombre")
+let inputPrecioPorHora = document.getElementById("precioPorHora")
+let inputCantidadHorasOferta = document.getElementById("cantidadHorasOferta")
+let inputPrecioOferta = document.getElementById("precioOferta")
+let inputIdArtistaAgregarCarrito = document.getElementById("idArtistaAgregarCarrito")
+let inputIdArtistaAEliminar = document.getElementById("idArtistaAEliminar")
+let inputCantidadHorasContrato = document.getElementById("cantidadHorasContrato")
+
+let btnCargarArtista = document.getElementById("btnCargarArtista")
+let btnBorrar = document.getElementById("btnBorrar")
+let btnAgregarAlCarrito = document.getElementById("btnAgregarAlCarrito")
+let btnBorrarArtista = document.getElementById("btnBorrarArtista")
+let btnCarrito = document.getElementById("btnCarrito")
+let btnFinalizarCompra = document.getElementById("btnFinalizarCompra")
+let contenedorBotonCarrito = document.getElementById("contenedorBotonCarrito")
+
+let contenedorArtistas = document.getElementById("contenedorArtistas")
+let contenedorErrores = document.getElementById("contenedorErrores")
+
 // Class constructora, con sus métodos correspondientes
 class Artista {
     constructor(id, nombre, precioPorHora, cantidadHorasOferta, precioOferta) {
@@ -8,16 +28,6 @@ class Artista {
         this.precioOferta = precioOferta
         this.precioFinal = 0
     }
-
-    // Método para mostrar la información del artista en un párrafo
-    mostrarArtista() {
-        console.log(`El nombre del artista es ${this.nombre}, el precio por hora para contratarlo es de ${this.precioPorHora} ¡¡Y tiene una oferta especial por contratarlo en nuestra página: ${this.cantidadHorasOferta} horas por sólo ${this.precioOferta}!!`)
-    }
-
-    // Método para mostrar la información del artista en un catálogo
-    mostrarEnCatalogo() {
-        console.log(`ID: ${this.id} || Nombre: ${this.nombre} || Precio por hora: ${this.precioPorHora} || Oferta especial: ${this.cantidadHorasOferta} horas por ${this.precioOferta}`)
-    }
 }
 
 // Arrays de objetos
@@ -26,54 +36,65 @@ const productosCarrito = []
 
 // Función para mostrar el catálogo
 function mostrarCatalogo(array){
-    console.log("Nuestro catálogo de artistas es: ")
+
+    contenedorArtistas.innerHTML = ""
+
     for(let artista of array){
-        artista.mostrarEnCatalogo()
+        
+        let artistaNuevoDiv = document.createElement("div")
+        artistaNuevoDiv.className = "artista"
+        artistaNuevoDiv.innerHTML = `
+            <div>
+                <h3> 
+                    Nombre: ${artista.nombre} || Precio por hora: ${artista.precioPorHora} || Oferta especial: ${artista.cantidadHorasOferta} horas por ${artista.precioOferta}
+                    <br> ID: ${artista.id}
+                </h3>
+            </div> `
+        contenedorArtistas.append(artistaNuevoDiv)
     }
 }
 
 // Función para agregar un artista a la página y al catálogo, ej: Artista(1, "Juan", 2000, 3, 5000)
-function agregarArtista() {
-    let nombre = prompt(`Ingrese el nombre del artista:`)
-    let precioPorHora = parseInt(prompt(`Ingrese el precio por hora para poder contratar a ${nombre}:`))
-    let cantidadHorasOferta = parseInt(prompt(`Ingrese la cantidad de horas por la oferta especial de ${nombre}:`))
-    let precioOferta = parseInt(prompt(`Ingrese el precio por la oferta especial de ${nombre}:`))
+function agregarArtista(nombre, precioPorHora, cantidadHorasOferta, precioOferta) {
     // Instanciar al artista en un objeto y agregarlo al catálogo
     const nuevoArtista = new Artista(catalogo.length+1, nombre, precioPorHora, cantidadHorasOferta, precioOferta)
-    catalogo.push(nuevoArtista) 
+    catalogo.push(nuevoArtista)
+    mostrarCatalogo(catalogo)
+    localStorage.setItem("catalogo", JSON.stringify(catalogo))
 }
 
 // Función para borrar un artista (en caso de que ya no forme parte de nuestra página)
-function borrarArtista(array){
-    mostrarCatalogo(array)
-    let idEliminar = parseInt(prompt("Observar el catalogo en consola y seleccionar ID a eliminar"))
+function borrarArtista(array, id){
     let coincidencia = false
     for(let elem of array){
-        if(elem.id == idEliminar){
+        if(elem.id == id){
             let indice = array.indexOf(elem)
 
             array.splice(indice, 1)
             mostrarCatalogo(array)
             coincidencia = true
+
+            contenedorErrores.innerHTML = `
+            <h2> Todo marcha perfectamente bien :D </h2>
+        `
         }
     }
     if(!coincidencia){
-            console.log(`¡¡ERROR!! El id ${idEliminar} no coincide con ningún artista de nuestro catálogo. No se pudo eliminar`)  
+        contenedorErrores.innerHTML = `
+            <h2> ERROR el ID: ${id} NO existe en nuestro catálogo </h2>
+        `
     }
+    localStorage.setItem("catalogo", JSON.stringify(catalogo))
 }
 
 // Función para poder agregar contrato(s) al carrito
-function agregarAlCarrito(stock, carrito){
-    mostrarCatalogo(stock)
-    let idArtista = parseInt(prompt(`Ingrese el id del artista que desea contratar:`))
-    let cantidadHoras = parseInt(prompt(`Ingrese la cantidad de horas que desea contratar al artista:`))
+function agregarAlCarrito(stock, carrito, idArtista, cantidadHoras){
     let precioFinal = 0
     let artistaContratado = stock.find(
         (artista) => artista.id == idArtista 
     )
     // Definir si la cantidad de horas a contratar aplica para la oferta o no y calcular el precio final en base a la cantidad de horas
     if(cantidadHoras >= artistaContratado.cantidadHorasOferta) {
-        console.log(`¡¡¡¡Aplica oferta!!!!`)
         precioFinal = parseInt((Math.trunc(cantidadHoras / artistaContratado.cantidadHorasOferta) * artistaContratado.precioOferta) 
         + ((cantidadHoras % artistaContratado.cantidadHorasOferta) * artistaContratado.precioPorHora))
     } else if (cantidadHoras < artistaContratado.cantidadHorasOferta) {
@@ -82,7 +103,34 @@ function agregarAlCarrito(stock, carrito){
 
     artistaContratado.precioFinal = precioFinal
     carrito.push(artistaContratado)
-    console.log(carrito)
+    localStorage.setItem("carrito", JSON.stringify(carrito))
+}
+
+function mostrarCarrito(array){
+
+    contenedorArtistas.innerHTML = ""
+
+    for(let artista of array){
+        
+        let artistaNuevoDiv = document.createElement("div")
+        artistaNuevoDiv.className = "artista"
+        artistaNuevoDiv.innerHTML = `
+            <h3> 
+                Nombre: ${artista.nombre} || Precio por hora: ${artista.precioPorHora} || Oferta especial: ${artista.cantidadHorasOferta} horas por ${artista.precioOferta}
+                <br> ID: ${artista.id}
+                <br> <hr>
+                PRECIO FINAL: ${artista.precioFinal}
+            </h3>`
+        contenedorArtistas.append(artistaNuevoDiv)
+    }
+
+    let divbtnAgregarAlCarrito = document.createElement("div")
+    divbtnAgregarAlCarrito.className = "contenedorBotonesCarrito"
+    divbtnAgregarAlCarrito.innerHTML = `
+        <a href="./index.html">
+            <button class="btnMostrarCatalogo"> MOSTRAR CATALOGO </button>
+        </a>`
+    contenedorArtistas.append(divbtnAgregarAlCarrito)
 }
 
 // Función para finalizar la compra
@@ -92,74 +140,69 @@ function finalizarCompra(carrito){
         {return acc + elemento.precioFinal},
         0
     )
-    console.log(`El total de su compra es ${totalReduce}. Muchas gracias!`)
-
+    
+    let totalDiv = document.createElement("div")
+    totalDiv.className = "total"
+    totalDiv.innerHTML = `
+    Su TOTAL es: ${totalReduce}`
+    contenedorBotonesCarrito.append(totalDiv)
     carrito = []
+    localStorage.removeItem("carrito")
 }
 
-function mostrarUnArtista(catalogo) {
-    mostrarCatalogo(catalogo)
-    let artistaSeleccionado = parseInt(prompt("Ingresar ID del artista a mostrar:"))
-    let artistaEncontrado = catalogo.find(
-        (artista) => artista.id == artistaSeleccionado 
-    )
-    artistaEncontrado.mostrarArtista()
-}
 
 // Ejemplos de artistas para probar las opciones sin tener que crearlos cada vez
 artista1 = new Artista(1, "Juan", 2000, 3, 5000)
 artista2 = new Artista(2, "María", 4000, 4, 14000)
 artista3 = new Artista(3, "Gustavo", 1000, 5, 3000)
 
-catalogo.push(artista1, artista2, artista3)
+if(localStorage.getItem("catalogo")){
 
-// Función menú para que el usuario elija las opciones que crea necesarias
-function menu() {
-    let salirDelMenu = false
-    do {
-        let opcion = parseInt(prompt(`
-        1. Agregar artista
-        2. Borrar artista
-        3. Mostrar catálogo de artistas
-        4. Agregar al carrito
-        5. Finalizar compra
-        6. Mostrar un artista
+    for(let artista of JSON.parse(localStorage.getItem("catalogo"))){
+        let artistaStorage = new Artista (artista.id, artista.nombre, artista.precioPorHora, artista.cantidadHorasOferta, artista.precioOferta)
+        estanteria.push(artistaStorage)
+    }
 
-        0. Salir del menú
-        Ingrese la opción que desea:`))
-
-        switch(opcion) {
-            case 1:
-                agregarArtista()
-                break
-            
-            case 2:
-                borrarArtista(catalogo)
-                break
-
-            case 3:
-                mostrarCatalogo(catalogo)
-                break
-
-            case 4:
-                agregarAlCarrito(catalogo, productosCarrito)
-                break
-
-            case 5:
-                finalizarCompra(productosCarrito)
-                break
-
-            case 6:
-                mostrarUnArtista(catalogo)
-                break
-            
-            case 0:
-                salirDelMenu = true
-                break
-        }
-    } while (!salirDelMenu)
+}else{
+    //no existe seteamos porprimera vez
+    console.log("seteamos por primera vez")
+    estanteria.push(libro1,libro2,libro3,libro4,libro5,libro6)
+    localStorage.setItem("estanteria", JSON.stringify(estanteria))
 }
 
-menu()
+// Eventos
+btnCargarArtista.addEventListener("click", () => {
+    agregarArtista(inputNombre.value, inputPrecioPorHora.value, inputCantidadHorasOferta.value, inputPrecioOferta.value)
+    inputNombre.value = ""
+    inputPrecioPorHora.value = ""
+    inputCantidadHorasOferta.value = ""
+    inputPrecioOferta.value = ""
+})
 
-alert(`¡¡Gracias por usar nuestra página para consultar y contratar artistas!!`)
+btnBorrar.addEventListener("click", () => {
+    inputNombre.value = ""
+    inputPrecioPorHora.value = ""
+    inputCantidadHorasOferta.value = ""
+    inputPrecioOferta.value = ""
+})
+
+btnBorrarArtista.addEventListener("click", () => {
+    borrarArtista(catalogo, inputIdArtistaAEliminar.value)
+    inputIdArtistaAEliminar.value = ""
+})
+
+btnAgregarAlCarrito.addEventListener("click", () => {
+    agregarAlCarrito(catalogo, productosCarrito, inputIdArtistaAgregarCarrito.value, inputCantidadHorasContrato.value)
+    inputIdArtistaAgregarCarrito.value = ""
+    inputCantidadHorasContrato.value = ""
+})
+
+btnCarrito.addEventListener("click", () => {
+    mostrarCarrito(productosCarrito)
+})
+
+btnFinalizarCompra.addEventListener("click", () => {
+    finalizarCompra(productosCarrito)
+})
+
+mostrarCatalogo(catalogo)

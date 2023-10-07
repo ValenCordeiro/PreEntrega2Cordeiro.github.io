@@ -3,10 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contratar artistas</title>
+    <title> Contratar artistas </title>
+    <link rel="stylesheet" href="./main.css">
 </head>
 <body>
     
+    <main>
+
+        <div class="contenedorFormularioAgregarCarritoOBorrar">
+            <input id="idArtistaAgregarCarrito" type="text" placeholder="Ingrese el id del artista que desea contratar (agregar al carrito)">
+            <input id="cantidadHorasContrato" type="text" placeholder="Ingrese la cantidad de horas que desea contratar al artista (agregar al carrito)">
+            <button id="btnAgregarAlCarrito"> AGREGAR AL CARRITO </button>
+            <input id="idArtistaAEliminar" type="text" placeholder="Ingrese el id del artista que desea eliminar">
+            <button id="btnBorrarArtista"> BORRAR ARTISTA </button>
+        </div>
+
+        <div id="contenedorErrores">
+            <h2> Todo marcha perfectamente bien :D </h2>
+        </div>
+
+        <div id="contenedorArtistas">
+            <div class="artista">
+                <h3> 
+                    Nombre: Juan || Precio por hora: 2000 || Oferta especial: 3 horas por 5000
+                </h3>
+            </div>
+        </div>
+
+        <div class="contenedorFormularioCargarArtisa">
+            <input id="nombre" type="text" placeholder="Ingrese el nombre del artista">
+            <input id="precioPorHora" type="text" placeholder="Ingrese el precio por hora para contrato del artista">
+            <input id="cantidadHorasOferta" type="text" placeholder="Ingrese la cantidad de horas de oferta para contratar al artista">
+            <input id="precioOferta" type="text" placeholder="Ingrese el precio de la oferta para contratar al artista">
+        </div>
+
+        <div class="contenedorBotonCargarArtista">
+            <button id="btnCargarArtista"> CARGAR ARTISTA </button>
+            <button id="btnBorrar"> BORRAR </button>
+        </div>
+
+        <div id="contenedorBotonesCarrito">
+            <button id="btnCarrito"> VER CARRITO </button>
+            <button id="btnFinalizarCompra"> FINALIZAR COMPRA </button>
+        </div>
+
+    </main>
+
     <script src="functions.js"></script>
 
 </body>

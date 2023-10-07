@@ -1,0 +1,138 @@
+body {
+    background-color: rgb(1, 152, 152);
+}
+
+.contenedorFormularioCargarArtisa {
+    border: 2px dashed black;
+    width: 530px;
+    margin-left: 100px;
+    margin-top: 20px;
+}
+
+.contenedorFormularioCargarArtisa:hover {
+    background-color: aqua;
+}
+
+input {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    display: flex;
+    width: 500px;
+    margin: 10px;
+    padding: 5px;
+}
+
+input:focus {
+    background-color: aquamarine;
+}
+
+.contenedorBotonCargarArtista {
+    display: flex;
+    border: 2px dashed black;
+    border-top: none;
+    width: 530px;
+    justify-content: center;
+    margin-left: 100px;
+}
+
+.contenedorBotonCargarArtista:hover {
+    background-color: aqua;
+}
+
+button {
+    margin: 10px;
+    padding: 5px;
+}
+
+#btnCargarArtista:hover {
+    background-color: rgb(53, 139, 53);
+}
+
+#btnBorrar:hover {
+    background-color: rgb(253, 94, 94);
+}
+
+#contenedorArtistas {
+    border: 2px dashed black;
+    width: 1000px;
+    margin: 10px;
+}
+
+#contenedorArtistas:hover {
+    background-color: aqua;
+}
+
+.artista {
+    border: 2px solid black;
+    display: flex;
+    margin: 10px;
+    padding: 10px;
+}
+
+.artista:hover {
+    background-color: rgb(3, 161, 161);
+}
+
+#btnBorrarArtista:hover {
+    background-color: rgb(253, 94, 94);
+}
+
+#btnAgregarAlCarrito:hover {
+    background-color: rgb(53, 139, 53);
+}
+
+button {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.contenedorFormularioAgregarCarritoOBorrar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px dashed black;
+    width: 600px;
+    margin: 10px;
+}
+
+.contenedorFormularioAgregarCarritoOBorrar:hover {
+    background-color: aqua;
+}
+
+#btnBorrarArtista,
+#btnAgregarAlCarrito {
+    width: 200px;
+}
+
+#contenedorErrores {
+    margin-left: 20px;
+}
+
+#contenedorBotonesCarrito {
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+#btnCarrito:hover {
+    background-color: rgb(53, 139, 53);
+}
+
+.contenedorBotonesCarrito {
+    display: flex;
+    justify-content: center;
+}
+
+.btnMostrarCatalogo:hover {
+    background-color: rgb(53, 139, 53);
+}
+
+#btnFinalizarCompra:hover {
+    background-color: gold;
+}
+
+.total {
+    border: 2px solid black;
+    display: flex;
+    background-color: blueviolet;
+    width: auto;
+    align-items: center;
+}
