@@ -160,14 +160,12 @@ if(localStorage.getItem("catalogo")){
 
     for(let artista of JSON.parse(localStorage.getItem("catalogo"))){
         let artistaStorage = new Artista (artista.id, artista.nombre, artista.precioPorHora, artista.cantidadHorasOferta, artista.precioOferta)
-        estanteria.push(artistaStorage)
+        catalogo.push(artistaStorage)
     }
 
 }else{
-    //no existe seteamos porprimera vez
-    console.log("seteamos por primera vez")
-    estanteria.push(libro1,libro2,libro3,libro4,libro5,libro6)
-    localStorage.setItem("estanteria", JSON.stringify(estanteria))
+    catalogo.push(artista1, artista2, artista3)
+    localStorage.setItem("catalogo", JSON.stringify(catalogo))
 }
 
 // Eventos
