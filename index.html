@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Contratar artistas </title>
     <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body>
     
@@ -16,10 +17,6 @@
             <button id="btnAgregarAlCarrito"> AGREGAR AL CARRITO </button>
             <input id="idArtistaAEliminar" type="text" placeholder="Ingrese el id del artista que desea eliminar">
             <button id="btnBorrarArtista"> BORRAR ARTISTA </button>
-        </div>
-
-        <div id="contenedorErrores">
-            <h2> Todo marcha perfectamente bien :D </h2>
         </div>
 
         <div id="contenedorArtistas">
@@ -49,6 +46,8 @@
 
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="functions.js"></script>
 
 </body>

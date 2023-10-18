@@ -16,7 +16,6 @@ let btnFinalizarCompra = document.getElementById("btnFinalizarCompra")
 let contenedorBotonCarrito = document.getElementById("contenedorBotonCarrito")
 
 let contenedorArtistas = document.getElementById("contenedorArtistas")
-let contenedorErrores = document.getElementById("contenedorErrores")
 
 // Class constructora, con sus métodos correspondientes
 class Artista {
@@ -74,15 +73,14 @@ function borrarArtista(array, id){
             mostrarCatalogo(array)
             coincidencia = true
 
-            contenedorErrores.innerHTML = `
-            <h2> Todo marcha perfectamente bien :D </h2>
-        `
         }
     }
     if(!coincidencia){
-        contenedorErrores.innerHTML = `
-            <h2> ERROR el ID: ${id} NO existe en nuestro catálogo </h2>
-        `
+        Swal.fire({
+            icon: 'ERROR',
+            title: 'Oops...',
+            text: 'Este ID no se encuentra en nuestra base de datos'
+          })
     }
     localStorage.setItem("catalogo", JSON.stringify(catalogo))
 }
@@ -106,6 +104,7 @@ function agregarAlCarrito(stock, carrito, idArtista, cantidadHoras){
     localStorage.setItem("carrito", JSON.stringify(carrito))
 }
 
+// Función para que los productos del carrito sean visibles para el usuario
 function mostrarCarrito(array){
 
     contenedorArtistas.innerHTML = ""
@@ -141,20 +140,39 @@ function finalizarCompra(carrito){
         0
     )
     
-    let totalDiv = document.createElement("div")
-    totalDiv.className = "total"
-    totalDiv.innerHTML = `
-    Su TOTAL es: ${totalReduce}`
-    contenedorBotonesCarrito.append(totalDiv)
     carrito = []
     localStorage.removeItem("carrito")
+    return totalReduce
 }
 
 
-// Ejemplos de artistas para probar las opciones sin tener que crearlos cada vez
-artista1 = new Artista(1, "Juan", 2000, 3, 5000)
-artista2 = new Artista(2, "María", 4000, 4, 14000)
-artista3 = new Artista(3, "Gustavo", 1000, 5, 3000)
+// Función para consumir una API de Chuck Norris e implementar una frase suya
+async function traerFraseDeCuckNorrisAPI() {
+    const respuesta = await fetch("https://api.chucknorris.io/jokes/random")
+    const infoFrase = await respuesta.json()
+    frase = infoFrase.value
+    return frase
+}
+
+
+// Función que trae los artistas del archivo JSON local
+async function cargarArtistas(array) {
+    const respuesta = await fetch("./artistas.json")
+    const infoArtista = await respuesta.json()
+    for(let artista of infoArtista) {
+        let artistaNuevo = new Artista (artista.id, artista.nombre, artista.precioPorHora, artista.cantidadHorasOferta, artista.precioOferta)
+        array.push(artistaNuevo)
+        localStorage.setItem("catalogo", JSON.stringify(catalogo))
+    }
+}
+
+// Función cargador
+function cargador() {
+    return new Promise((resolve) => {
+        setTimeout(resolve, 3000);
+    });
+}
+
 
 if(localStorage.getItem("catalogo")){
 
@@ -164,8 +182,7 @@ if(localStorage.getItem("catalogo")){
     }
 
 }else{
-    catalogo.push(artista1, artista2, artista3)
-    localStorage.setItem("catalogo", JSON.stringify(catalogo))
+    cargarArtistas(catalogo)
 }
 
 // Eventos
@@ -175,6 +192,10 @@ btnCargarArtista.addEventListener("click", () => {
     inputPrecioPorHora.value = ""
     inputCantidadHorasOferta.value = ""
     inputPrecioOferta.value = ""
+    Swal.fire({
+        icon: 'success',
+        title: 'Se ha agregado un artista a la base de datos.',
+    })
 })
 
 btnBorrar.addEventListener("click", () => {
@@ -185,14 +206,38 @@ btnBorrar.addEventListener("click", () => {
 })
 
 btnBorrarArtista.addEventListener("click", () => {
-    borrarArtista(catalogo, inputIdArtistaAEliminar.value)
-    inputIdArtistaAEliminar.value = ""
+    Swal.fire({
+        title: '¿Deseas eliminar este artista?',
+        text: "Esta acción no se puede revertir",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'BORRAR',
+        cancelButtonText: 'CANCELAR'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire(
+            'Borrado',
+            'El artista ha sido eliminado de la base de datos',
+            'success'
+            )
+            borrarArtista(catalogo, inputIdArtistaAEliminar.value),
+            inputIdArtistaAEliminar.value = ""
+        } else {
+            inputIdArtistaAEliminar.value = ""
+        }
+      })
 })
 
 btnAgregarAlCarrito.addEventListener("click", () => {
     agregarAlCarrito(catalogo, productosCarrito, inputIdArtistaAgregarCarrito.value, inputCantidadHorasContrato.value)
     inputIdArtistaAgregarCarrito.value = ""
     inputCantidadHorasContrato.value = ""
+    Swal.fire({
+        icon: 'success',
+        title: 'Se ha agregado un artista al carrito.',
+    })
 })
 
 btnCarrito.addEventListener("click", () => {
@@ -200,7 +245,29 @@ btnCarrito.addEventListener("click", () => {
 })
 
 btnFinalizarCompra.addEventListener("click", () => {
-    finalizarCompra(productosCarrito)
+    let total = finalizarCompra(productosCarrito)
+    let frase = traerFraseDeCuckNorrisAPI()
+    cargador().then(function() {
+        Toastify({
+            text: `Compra realizada con éxito \n 
+                Su total es: ${total} \n 
+                ${frase}`,
+            close: true,
+            gravity: "bottom",
+            position: "right",
+            style: {
+                color: "black",
+                background: "linear-gradient(to right, aqua, aquamarine)",
+            }
+        }).showToast();
+    });
+
 })
 
-mostrarCatalogo(catalogo)
+contenedorArtistas.innerHTML = `
+    <h3> CARGANDO... </h3>
+`
+
+cargador().then(function() {
+    mostrarCatalogo(catalogo)
+});

@@ -1,0 +1,25 @@
+[
+    {
+        "id": 1, 
+        "nombre": "Juan", 
+        "precioPorHora": 2000, 
+        "cantidadHorasOferta": 3, 
+        "precioOferta": 5000
+    },
+
+    {
+        "id": 2, 
+        "nombre": "María", 
+        "precioPorHora": 4000, 
+        "cantidadHorasOferta": 4, 
+        "precioOferta": 14000
+    },
+
+    {
+        "id": 3, 
+        "nombre": "Gustavo", 
+        "precioPorHora": 1000, 
+        "cantidadHorasOferta": 5, 
+        "precioOferta": 3000
+    }
+]

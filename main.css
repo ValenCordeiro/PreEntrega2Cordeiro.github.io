@@ -136,3 +136,8 @@ button {
     width: auto;
     align-items: center;
 }
+
+h3 {
+    display: flex;
+    justify-content: center;
+}
